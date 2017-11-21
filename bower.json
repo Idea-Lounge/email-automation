@@ -1,0 +1,22 @@
+{
+  "name": "contact-us",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Anurag Sahoo <anurag@aitoelabs.com>"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "magnific-popup": "^1.1.0"
+  }
+}
