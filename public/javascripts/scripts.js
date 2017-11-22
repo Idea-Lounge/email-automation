@@ -26,7 +26,7 @@ $(document).ready(function($) {
   $('#contact').on('click', function(event) {
     event.preventDefault();
 
-    $('#contactblurb').html('Questions, suggestions, and general comments are all welcome!');
+    $('#contactblurb').html('Please, check your mail. <br/> Let us know if you want your own marketing campaign!');
     $('.contact').addClass('is-visible');
 
     if ($('#name').val().length != 0) {
@@ -35,9 +35,9 @@ $(document).ready(function($) {
     if ($('#email').val().length != 0) {
       $('.email').addClass('typing');
     }
-    if ($('#message').val().length != 0) {
-      $('.message').addClass('typing');
-    }
+    // if ($('#message').val().length != 0) {
+    //   $('.message').addClass('typing');
+    // }
   });
 
   //close popup when clicking x or off popup
@@ -70,12 +70,12 @@ $(document).ready(function($) {
       $('.email').removeClass('typing');
     }
   });
-  $('#message').keyup(function() {
-    $('.message').addClass('typing');
-    if ($(this).val().length == 0) {
-      $('.message').removeClass('typing');
-    }
-  });
+  // $('#message').keyup(function() {
+  //   $('.message').addClass('typing');
+  //   if ($(this).val().length == 0) {
+  //     $('.message').removeClass('typing');
+  //   }
+  // });
 
   /* ----------------- */
   /* Handle submission */
@@ -86,29 +86,30 @@ $(document).ready(function($) {
     var message = $('#message').val();
     var human = $('#human:checked').val();
 
-    if (human) {
+    // if (human) {
       if (validateEmail(email)) {
         if (name) {
-          if (message) {
+          // if (message) {
 
             $.ajax({
-            url: "/users/contact-us",
+            url: "/users/send-email",
             type: "POST",
             data: JSON.stringify({
               "name": name,
             	"email": email,
-            	"message": message
             }),
             contentType: "application/json",
             dataType: "json",
           })
 
           closeForm();
+          $('#notification-text').html('<strong>Thank you!</strong>');
+          $('.notification').addClass('is-visible');
 
-          } else {
-            $('#notification-text').html("<strong>Please let us know what you're thinking!</strong>");
-            $('.notification').addClass('is-visible');
-          }
+          // } else {
+          //   $('#notification-text').html("<strong>Please let us know what you're thinking!</strong>");
+          //   $('.notification').addClass('is-visible');
+          // }
         } else {
           $('#notification-text').html('<strong>Please provide a name.</strong>');
           $('.notification').addClass('is-visible');
@@ -117,10 +118,10 @@ $(document).ready(function($) {
         $('#notification-text').html('<strong>Please use a valid email address.</strong>');
         $('.notification').addClass('is-visible');
       }
-    } else {
-      $('#notification-text').html('<h3><strong><em>Warning: Please prove you are a human and not a robot.</em></strong></h3>');
-      $('.notification').addClass('is-visible');
-    }
+    // } else {
+    //   $('#notification-text').html('<h3><strong><em>Warning: Please prove you are a human and not a robot.</em></strong></h3>');
+    //   $('.notification').addClass('is-visible');
+    // }
 
     return false;
   });
