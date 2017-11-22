@@ -4,17 +4,18 @@
     functions = require('./functions'),
 
     bodyParser = require('body-parser');
-/* Handel POST request from the contactUs form. */
-  router.post('/contact-us', function (req, res, next) {
+/* Handel POST request from the email automation form. */
+  router.post('/send-email', function (req, res, next) {
     // TODO: request parser
     var response = {};
-    functions.contactUs(req.body, function (error) {
+    console.log('sending email');
+    functions.sendEmail(req.body, function (error) {
       // TODO: grab informaion from req.body
       console.log(req.body);
       if (!error) {
         // if there is no error we construct a respose object
         response = {
-          'message': 'Email sent to freelancers.'
+          'message': 'Email sent.'
         };
         // send response( node bilt in function), we are passing respose object to it.
         res.json(response);

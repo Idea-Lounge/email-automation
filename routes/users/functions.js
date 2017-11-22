@@ -1,7 +1,8 @@
 (function () {
   "use strict";
   var nodemailer = require('nodemailer'),
-    config = require('../../config.js');
+    config = require('../../config.js'),
+    fs = require('fs');
 
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
@@ -16,47 +17,50 @@
     });
 
   var functions = {
-    contactUs: function (requestBody, callback) {
+    sendEmail: function (requestBody, callback) {
       const nodemailer = require('nodemailer');
 
-      var freelancers = '';
-        function getEmails(array) {
-          array.forEach(function(element) {
-            freelancers = freelancers + element.email + ',';
+
+      // setup email data with unicode symbols
+      var emailBody = 'Client: ' + requestBody.name + '\n';
+      emailBody += 'Email: ' + requestBody.email + '\n';
+      emailBody += 'Message: ' + requestBody.message;
+
+      var content;
+      // First I want to read the file
+      fs.readFile(config.path +'/template1.html', function (error, data) {
+          console.log('reading file!');
+        if (!error) {
+          content = data;
+          console.log(content);
+
+          let mailOptions = {
+            // codeReview(Anurag): IdeaLounge mail information to be stored in config and not here.
+            // fix(Alona): IdeaLounge mail information already was there, hopefully we can use it.
+            from: config.emailAccount.username, // sender address
+            to: requestBody.email, // list of receivers
+            subject: 'Email-Promotion example from Idea Lounge', // Subject line
+            // TODO: get html from another static html file in file system
+            html: content
+          };
+          // send mail with defined transport object
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (!error) {
+              callback(null);
+              console.log('Message sent: %s', info.messageId);
+            } else {
+              // codeReview(Anurag): I am passing the error which we get directly from nodemailer. Should change this to be more structured.
+              // feat():
+              callback(error);
+              console.log(error);
+            }
           });
+        } else {
+          console.log('there was an error reading the file', error);
         }
-
-        getEmails(config.freelancers);
-        console.log(freelancers);
-        // setup email data with unicode symbols
-        var emailBody = 'Client: ' + requestBody.name + '\n';
-        emailBody += 'Email: ' + requestBody.email + '\n';
-        emailBody += 'Message: ' + requestBody.message;
-        let mailOptions = {
-          // codeReview(Anurag): IdeaLounge mail information to be stored in config and not here.
-          // fix(Alona): IdeaLounge mail information already was there, hopefully we can use it.
-          from: config.emailAccount.username, // sender address
-          to: freelancers, // list of receivers
-          subject: 'New Message from IdeaLounge', // Subject line
-          text: emailBody// plain text bodys
-        };
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (!error) {
-            //QUESTION:is null an error? how the error will be passed if such appers?
-            //ANSWER: pass null here to show that there is no error in sending the email. If there is an error which appears see else condition. Resolved?
-            callback(null);
-            console.log('Message sent: %s', info.messageId);
-
-          } else {
-            // codeReview(Anurag): I am passing the error which we get directly from nodemailer. Should change this to be more structured.
-            // feat():
-            callback(error);
-            console.log(error);
-          }
-        });
-      }
-    };
+      });
+    }
+  };
 
   module.exports = functions;
 })();
