@@ -7,11 +7,9 @@ function validateEmail(email) {
 function closeForm() {
   document.contactform.name.value = '';
   document.contactform.email.value = '';
-  document.contactform.message.value = '';
 
   $('.email').removeClass('typing');
   $('.name').removeClass('typing');
-  $('.message').removeClass('typing');
 
   $('.cd-popup').removeClass('is-visible');
   $('.notification').addClass('is-visible');
@@ -26,7 +24,7 @@ $(document).ready(function($) {
   $('#contact').on('click', function(event) {
     event.preventDefault();
 
-    $('#contactblurb').html('Please, check your mail. <br/> Let us know if you want your own marketing campaign!');
+    $('#contactblurb').html('Please, check your . <br/> Let us know if you want your own marketing campaign!');
     $('.contact').addClass('is-visible');
 
     if ($('#name').val().length != 0) {
@@ -35,9 +33,6 @@ $(document).ready(function($) {
     if ($('#email').val().length != 0) {
       $('.email').addClass('typing');
     }
-    // if ($('#message').val().length != 0) {
-    //   $('.message').addClass('typing');
-    // }
   });
 
   //close popup when clicking x or off popup
@@ -70,12 +65,12 @@ $(document).ready(function($) {
       $('.email').removeClass('typing');
     }
   });
-  // $('#message').keyup(function() {
-  //   $('.message').addClass('typing');
-  //   if ($(this).val().length == 0) {
-  //     $('.message').removeClass('typing');
-  //   }
-  // });
+  $('#message').keyup(function() {
+    $('.message').addClass('typing');
+    if ($(this).val().length == 0) {
+      $('.message').removeClass('typing');
+    }
+  });
 
   /* ----------------- */
   /* Handle submission */
@@ -83,13 +78,9 @@ $(document).ready(function($) {
   $('#contactform').submit(function() {
     var name = $('#name').val();
     var email = $('#email').val();
-    var message = $('#message').val();
-    var human = $('#human:checked').val();
 
-    // if (human) {
       if (validateEmail(email)) {
         if (name) {
-          // if (message) {
 
             $.ajax({
             url: "/users/send-email",
@@ -103,13 +94,7 @@ $(document).ready(function($) {
           })
 
           closeForm();
-          $('#notification-text').html('<strong>Thank you!</strong>');
-          $('.notification').addClass('is-visible');
 
-          // } else {
-          //   $('#notification-text').html("<strong>Please let us know what you're thinking!</strong>");
-          //   $('.notification').addClass('is-visible');
-          // }
         } else {
           $('#notification-text').html('<strong>Please provide a name.</strong>');
           $('.notification').addClass('is-visible');
@@ -118,10 +103,6 @@ $(document).ready(function($) {
         $('#notification-text').html('<strong>Please use a valid email address.</strong>');
         $('.notification').addClass('is-visible');
       }
-    // } else {
-    //   $('#notification-text').html('<h3><strong><em>Warning: Please prove you are a human and not a robot.</em></strong></h3>');
-    //   $('.notification').addClass('is-visible');
-    // }
 
     return false;
   });
